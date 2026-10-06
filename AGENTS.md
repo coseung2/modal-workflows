@@ -16,3 +16,5 @@ README.md와 docs/modal-workflows.md를 읽고 사용자의 **자기 Modal 계�
 - 모델 파일 해시가 다르면 기존 파일을 자동 삭제·덮어쓰지 않는다. 소스·모델 lock을 변경하면 이유와 검증 범위를 기록한다.
 
 검증: `python -m unittest tools.test_modal_setup tools.test_modal_workflow`. 실제 GPU 검증은 승인된 최소 요청으로 수행한다.
+
+무드보드 제작은 `prompts/moodboard.md`를 따른다. **동일 장면·구도의 6가지 시각 방향을 한 이미지의 3열 × 2행 그리드로 생성**하고 사용자가 1–6번 중 선택하게 한다. 여섯 장면을 만들거나 여섯 이미지를 각각 생성하는 방식으로 바꾸지 않는다. 선택 또는 선택 위임을 받은 뒤 다음 단계로 진행한다.
