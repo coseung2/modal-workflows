@@ -1,0 +1,9 @@
+{
+  "model": "ideogram",
+  "prompt": "Minimal editorial poster for a fictional coffee event. Ivory background, one navy ceramic cup, generous negative space, clean bold typography. Only the supplied text.",
+  "text": "SLOW MORNING",
+  "width": 768,
+  "height": 1024,
+  "seed": 12,
+  "count": 1
+}

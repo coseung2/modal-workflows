@@ -1,0 +1,8 @@
+{
+  "model": "krea",
+  "prompt": "Create ONE image with exactly six equal panels in a 3-column by 2-row grid. Each panel is square. Show the SAME scene in all panels: an ivory ceramic cup centered on an oak table beside a window, eye-level medium close-up. Keep the cup identity, placement, framing, camera angle and objects identical. Change only visual treatment. Panel 1: warm natural editorial photography. Panel 2: cool muted cinematic photography. Panel 3: soft pastel watercolor. Panel 4: bold flat geometric illustration. Panel 5: tactile paper collage. Panel 6: detailed clay miniature. Thin dividers, small numbers 1 to 6 in reading order. No other text or logos. Six treatments of one scene, not a sequence of events.",
+  "width": 1536,
+  "height": 1024,
+  "seed": 12,
+  "count": 1
+}

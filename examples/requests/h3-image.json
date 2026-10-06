@@ -1,0 +1,9 @@
+{
+  "mode": "image",
+  "image_path": "inputs/first-frame.png",
+  "prompt": "Preserve the subject and setting of the first frame. A gentle breeze moves the fabric and hair while the camera slowly pushes in. Natural continuous motion, no cuts.",
+  "seconds": 5,
+  "width": 768,
+  "height": 1344,
+  "seed": 42
+}

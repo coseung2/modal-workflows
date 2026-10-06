@@ -1,0 +1,9 @@
+{
+  "mode": "reference",
+  "video_path": "inputs/motion.mp4",
+  "prompt": "Use <Video 1> as the reference for camera movement and action timing. A person in a navy coat walks through a quiet courtyard. One continuous shot, realistic motion.",
+  "seconds": 10,
+  "width": 1344,
+  "height": 768,
+  "seed": 42
+}
