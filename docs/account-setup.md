@@ -16,6 +16,8 @@ Starter는 기본 구독료 $0에 사용량 과금이 더해지며 **매월 $30�
 
 ## 3. API 토큰 발급
 
+아래 CLI 명령은 먼저 [README의 uv 준비](../README.md#1-로컬-준비)를 마친 뒤 저장소 루트에서 실행합니다. Python 별도 설치나 가상환경 활성화는 필요 없습니다.
+
 Modal Dashboard에서 사용할 워크스페이스의 설정으로 이동해 **API Tokens**를 찾아 토큰을 생성합니다. 토큰은 **Token ID와 Token Secret 한 쌍**입니다. 이 저장소의 SDK 인증에는 API 토큰을 사용하며 웹 엔드포인트용 Proxy Token과 구분합니다. [공식 SDK 인증 안내](https://modal.com/docs/guide/trigger-deployed-functions)
 
 토큰 발급 화면의 유효기간과 권한을 확인하고, 값은 자신의 비밀 저장소 또는 에이전트 실행기의 Secret 설정에 보관합니다. 토큰 원문을 채팅·스크린샷·Git·요청 JSON에 넣지 않습니다.
@@ -23,10 +25,10 @@ Modal Dashboard에서 사용할 워크스페이스의 설정으로 이동해 **A
 PC에서만 사용할 경우 수동 환경 변수 대신 아래 CLI 인증을 선택해도 됩니다. 별도 토큰을 중복 발급할 필요는 없습니다.
 
 ```sh
-python -m modal setup
+uv run python -m modal setup
 ```
 
-이미 SDK가 설치돼 있고 새 CLI 토큰을 직접 발급하려면 `python -m modal token new`를 사용합니다. 기존에 발급받은 토큰을 CLI 저장소에 입력하려면 `python -m modal token set`의 입력 프롬프트를 사용합니다. [공식 토큰 CLI](https://modal.com/docs/cli/latest/token)
+이미 SDK가 설치돼 있고 새 CLI 토큰을 직접 발급하려면 `uv run python -m modal token new`를 사용합니다. 기존에 발급받은 토큰을 CLI 저장소에 입력하려면 `uv run python -m modal token set`의 입력 프롬프트를 사용합니다. [공식 토큰 CLI](https://modal.com/docs/cli/latest/token)
 
 ## 4. 환경 변수로 전달하는 경우
 
@@ -46,7 +48,7 @@ python -m modal setup
 ```powershell
 $env:MODAL_TOKEN_ID = Read-Host 'Modal Token ID' -MaskInput
 $env:MODAL_TOKEN_SECRET = Read-Host 'Modal Token Secret' -MaskInput
-python -m modal app list --json
+uv run python -m modal app list --json
 ```
 
 이 터미널에서 실행한 Python·CLI·에이전트 자식 프로세스에 적용됩니다. 이미 실행 중인 별도 데스크톱 에이전트에는 전달되지 않습니다. 그 경우 실행기의 Secret 설정이나 CLI 인증을 이용합니다. 터미널을 닫으면 이 방식의 설정은 사라집니다.
@@ -57,7 +59,7 @@ python -m modal app list --json
 read -r -s -p 'Modal Token ID: ' MODAL_TOKEN_ID; echo
 read -r -s -p 'Modal Token Secret: ' MODAL_TOKEN_SECRET; echo
 export MODAL_TOKEN_ID MODAL_TOKEN_SECRET
-python -m modal app list --json
+uv run python -m modal app list --json
 ```
 
 현재 Bash와 그 자식 프로세스에만 적용됩니다. 다른 셸에서는 실행기의 Secret 설정 또는 CLI 인증을 사용합니다.
@@ -67,9 +69,9 @@ python -m modal app list --json
 저장소 README대로 Python 가상환경과 `requirements.txt`를 준비한 뒤:
 
 ```sh
-python -m modal app list --json
-python -m modal volume list
-python tools/setup_modal.py h3
+uv run python -m modal app list --json
+uv run python -m modal volume list
+uv run python tools/setup_modal.py h3
 ```
 
 새 계정이라 앱·볼륨 목록이 비어 있어도 오류 없이 조회되면 인증 연결은 된 것입니다. 이것만으로 카드 등록·크레딧·GPU 실행 가능 여부까지 확인된 것은 아닙니다. 결제·크레딧 상태는 사용자가 Dashboard에서 확인합니다.

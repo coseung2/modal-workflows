@@ -8,19 +8,21 @@
 
 처음 사용하는 계정은 [가입·카드 등록·API 토큰 설정](account-setup.md)을 먼저 완료한다. 카드 등록과 Starter의 매월 $30 컴퓨트 크레딧 적용은 사용자가 확인한다. 기존에 완료한 인증·결제 등록을 반복하지 않는다.
 
-Python 3.12 가상환경을 만들고 활성화한다. 모든 명령은 저장소 루트에서 해당 가상환경의 Python으로 실행한다.
+로컬 준비는 uv를 기본으로 한다. 설치 방법은 [README](../README.md#1-로컬-준비)를 따른다. 아래 명령은 저장소 루트에서 실행하며 가상환경을 활성화할 필요가 없다. 기존 `.venv`가 있으면 버전을 확인하고 재사용한다. 다른 환경을 자동 삭제하지 않는다.
 
 ```sh
-python -m pip install "modal==1.6.1"
-python tools/modal_workflow.py --help
-python -m modal profile current
-python -m modal app list --json
-python -m modal volume list
+uv venv --python 3.12
+uv pip install --python .venv -r requirements.txt
+uv run python --version
+uv run python tools/modal_workflow.py --help
+uv run python -m modal profile current
+uv run python -m modal app list --json
+uv run python -m modal volume list
 ```
 
-이미 인증돼 있으면 그대로 사용한다. 처음 인증만 사용자가 `python -m modal setup`에서 완료한다. 자동화 환경은 기존 `MODAL_TOKEN_ID`, `MODAL_TOKEN_SECRET`을 실행기의 비밀 환경 변수로 주입한다. 에이전트가 토큰 값을 읽어 출력하거나 요청 파일에 넣지 않는다.
+이미 인증돼 있으면 그대로 사용한다. 처음 인증만 사용자가 `uv run python -m modal setup`에서 완료한다. 자동화 환경은 기존 `MODAL_TOKEN_ID`, `MODAL_TOKEN_SECRET`을 실행기의 비밀 환경 변수로 주입한다. 에이전트가 토큰 값을 읽어 출력하거나 요청 파일에 넣지 않는다.
 
-여러 계정이면 `python -m modal profile list`로 이름을 확인하고 `python -m modal profile activate PROFILE`로 사용자가 지정한 계정을 선택한다. 환경 변수가 설정된 경우 SDK 인증이 프로필보다 우선할 수 있다. 명령 간 동일한 계정과 `MODAL_ENVIRONMENT`를 유지한다. [Modal 인증과 배포 조회](https://modal.com/docs/guide/trigger-deployed-functions)
+여러 계정이면 `uv run python -m modal profile list`로 이름을 확인하고 `uv run python -m modal profile activate PROFILE`로 사용자가 지정한 계정을 선택한다. 환경 변수가 설정된 경우 SDK 인증이 프로필보다 우선할 수 있다. 명령 간 동일한 계정과 `MODAL_ENVIRONMENT`를 유지한다. [Modal 인증과 배포 조회](https://modal.com/docs/guide/trigger-deployed-functions)
 
 기존 배포가 있으면 앱을 설치하거나 재배포하지 않고 4절로 진행한다. 없으면 2절을 따른다. 공개 GitHub 저장소는 유지보수자의 Modal 워크스페이스를 공유하는 서비스가 아니다.
 
@@ -41,8 +43,8 @@ macOS/Linux: `export EASYGEN_WORKFLOW_PREFIX=my-studio`. 1–40자의 영문 소
 ### 에이전트가 수행할 명령
 
 ```sh
-python tools/setup_modal.py h3
-python tools/setup_modal.py h3 --apply
+uv run python tools/setup_modal.py h3
+uv run python tools/setup_modal.py h3 --apply
 ```
 
 `--apply` 없는 명령은 로컬 계획만 출력한다. `--apply`는 현재 인증된 워크스페이스에서 다음을 순서대로 수행하며 오류 시 멈춘다:
@@ -73,7 +75,7 @@ H3 모델 라이선스는 확보된 전제다. 다른 모델의 이용 조건은
 끊긴 다운로드는 완료 파일과 `.download-cache`를 같은 볼륨에 보존한다. 이전 준비 작업이 종료됐는지 확인한 뒤 동일 명령을 명시적으로 재실행하면 정상 파일은 검증 후 건너뛴다. 같은 볼륨에 다운로드 작업을 중복 실행하지 않는다. 기존 파일의 해시가 다르면 덮어쓰지 않고 오류를 낸다. 이를 무시하거나 파일을 자동 삭제하지 않는다.
 
 ```sh
-python -m modal run modal/bootstrap.py --target h3 --verify-only
+uv run python -m modal run modal/bootstrap.py --target h3 --verify-only
 ```
 
 `--verify-only`는 이미 있는 모델의 크기·해시만 검사한다. CPU 실행·볼륨 읽기 비용은 있을 수 있다. 모델을 Git이나 컨테이너 이미지에 넣지 않는다.
@@ -83,11 +85,11 @@ python -m modal run modal/bootstrap.py --target h3 --verify-only
 일괄 도구 대신 필요한 단계만 실행할 수도 있다:
 
 ```sh
-python -m modal run modal/check_environment.py
-python -m modal run modal/bootstrap.py --target h3
-python -m modal deploy modal/workflow_h3.py
-python -m modal app info my-workflow-h3 --json
-python -m modal app history my-workflow-h3 --json
+uv run python -m modal run modal/check_environment.py
+uv run python -m modal run modal/bootstrap.py --target h3
+uv run python -m modal deploy modal/workflow_h3.py
+uv run python -m modal app info my-workflow-h3 --json
+uv run python -m modal app history my-workflow-h3 --json
 ```
 
 이미지 배포는 `modal/workflow_image.py`, 음악은 `modal/workflow_music.py`를 사용한다. 별도 이미지 ID 입력·앱 설치·After Effects 설치는 필요 없다. 배포는 같은 이름의 기존 워크플로우를 갱신하므로 진행 중 작업을 먼저 확인한다.
@@ -124,14 +126,14 @@ CPU 노드 등록·파일 해시·배포 성공은 실제 GPU 추론 성공과 �
 길이는 1–15초로 제한되고 24fps의 `17k+5` 프레임 수로 올림한다. 예를 들어 2초는 56프레임이므로 약 2.33초다. 가로·세로는 32 배수로 내림하며 256 미만이면 거절한다. 요청값과 실제 결과 길이·해상도를 구분한다. 원본 UI JSON을 그대로 `run_graph`에 보내지 않는다. 준비 단계가 API JSON으로 변환한다.
 
 ```sh
-python tools/modal_workflow.py prepare video --request ../video-request.json --out ../video-run
+uv run python tools/modal_workflow.py prepare video --request ../video-request.json --out ../video-run
 ```
 
 이 단계는 로컬 작업만 하며 `graph.json`을 확인할 수 있다. 생성 범위가 승인됐으면:
 
 ```sh
-python tools/modal_workflow.py submit ../video-run
-python tools/modal_workflow.py status ../video-run
+uv run python tools/modal_workflow.py submit ../video-run
+uv run python tools/modal_workflow.py status ../video-run
 ```
 
 `submit`은 입력 업로드 후 원격 호출을 한 번 제출하고 ID를 저장한다. `status`는 한 번 조회하고 종료한다. 아직 `submitted`면 30–60초 뒤 같은 폴더를 다시 조회한다. 매번 새 작업을 제출하지 않는다.
@@ -152,9 +154,9 @@ python tools/modal_workflow.py status ../video-run
 Ideogram은 `"model": "ideogram"`으로 바꾸고 선택적으로 `"text": "HELLO"`를 추가한다. 일반 프롬프트는 코드가 구조화된 caption으로 확장한다. 이 API에는 참조 이미지·이미지 편집 인자가 없다. `count`는 1–4다. 런타임은 크기를 16 배수로 내림한다.
 
 ```sh
-python tools/modal_workflow.py prepare image --request ../image-request.json --out ../image-run
-python tools/modal_workflow.py submit ../image-run
-python tools/modal_workflow.py status ../image-run
+uv run python tools/modal_workflow.py prepare image --request ../image-request.json --out ../image-run
+uv run python tools/modal_workflow.py submit ../image-run
+uv run python tools/modal_workflow.py status ../image-run
 ```
 
 이미지는 회색 빈 결과를 일부 제외할 수 있어 실제 저장 개수가 요청보다 적을 수 있다. 전부 제외되면 오류다.
@@ -170,9 +172,9 @@ python tools/modal_workflow.py status ../image-run
 ```
 
 ```sh
-python tools/modal_workflow.py prepare music --request ../music-request.json --out ../music-run
-python tools/modal_workflow.py submit ../music-run
-python tools/modal_workflow.py status ../music-run
+uv run python tools/modal_workflow.py prepare music --request ../music-request.json --out ../music-run
+uv run python tools/modal_workflow.py submit ../music-run
+uv run python tools/modal_workflow.py status ../music-run
 ```
 
 YuE2는 `style`, `lyrics`, `seed`만 받는다. 길이 지정 인자는 없고, 무가사 입력만으로 보컬 없는 음악을 보장하지 않는다. 워크플로우 JSON을 찾아 설치할 필요가 없다.
@@ -182,7 +184,7 @@ YuE2는 `style`, `lyrics`, `seed`만 받는다. 길이 지정 인자는 없고, 
 `status`가 `completed`를 반환하면:
 
 ```sh
-python tools/modal_workflow.py download ../video-run
+uv run python tools/modal_workflow.py download ../video-run
 # 이미지·음악은 해당 run 폴더를 지정한다.
 ```
 
@@ -212,7 +214,7 @@ ffmpeg -v error -i ../music-run/audio.flac -f null -
 ## 5. 중단·복구·오류
 
 ```sh
-python tools/modal_workflow.py cancel ../video-run
+uv run python tools/modal_workflow.py cancel ../video-run
 ```
 
 취소는 같은 호출 ID에 요청한다. `cancel_requested`는 원격 정지·과금 종료 확인이 아니다. 상태나 컨테이너를 별도로 확인한다. 취소 후 새 생성이 필요하면 새 폴더를 사용하며 승인된 실행 범위를 넘지 않는다.
@@ -236,7 +238,7 @@ SDK 직접 호출은 [Modal Function lookup·spawn](https://modal.com/docs/guide
 ## 6. 검증 범위
 
 ```sh
-python -m unittest tools.test_modal_setup tools.test_modal_workflow
+uv run python -m unittest tools.test_modal_setup tools.test_modal_workflow
 ```
 
 호출기 로컬 테스트와 H3 그래프 연결·메타데이터 정리는 GPU를 사용하지 않는다. 공개 소스만으로 새 컨테이너를 빌드하고 CPU에서 H3·이미지 필수 노드 14개 등록을 실제 확인했다. 새 계정 전체 모델 다운로드와 GPU 추론 검증은 이번 작업에서 수행하지 않았다. GPU 모델 파일은 Git에 포함하지 않으며 각자 자신의 볼륨에 준비한다. 새 계정의 GPU 추론 성공은 실제 생성으로 별도 검증한다.

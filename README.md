@@ -2,7 +2,7 @@
 
 **자신의 Modal 계정에 영상·이미지·음악 생성 워크플로우를 구축하는 안내와 실행 코드**입니다. 코딩 에이전트가 환경 빌드, 모델 다운로드, 배포, 생성과 결과 회수까지 진행할 수 있습니다.
 
-앱 코드나 개인 운영 서버는 포함하지 않습니다. **앱·After Effects·Node.js·Rust·로컬 GPU·로컬 ComfyUI는 필요 없습니다.** Python 3.12, Git, 자신의 Modal 계정만 준비합니다. FFmpeg는 다운로드한 미디어 검증에 선택적으로 사용합니다.
+앱 코드나 개인 운영 서버는 포함하지 않습니다. **앱·After Effects·Node.js·Rust·로컬 GPU·로컬 ComfyUI는 필요 없습니다.** uv, Git, 자신의 Modal 계정을 준비합니다. Python 3.12는 uv가 준비합니다. FFmpeg는 다운로드한 미디어 검증에 선택적으로 사용합니다.
 
 H3 이용자는 **이용 라이선스를 이미 확보한 것으로 전제**합니다. 에이전트가 취득 여부나 증빙을 다시 묻지 않습니다. Modal 인증, 모델 다운로드 접근권과 비용 사용 범위는 각자 자신의 환경에서 설정합니다.
 
@@ -31,29 +31,32 @@ H3 이용자는 **이용 라이선스를 이미 확보한 것으로 전제**합�
 
 ## 1. 로컬 준비
 
+먼저 `uv --version`으로 설치 여부를 확인합니다. 없으면 Windows에서는 `winget install --id=astral-sh.uv -e`, macOS에서는 `brew install uv`를 사용할 수 있습니다. Linux 또는 다른 설치 방법은 [uv 공식 설치 안내](https://docs.astral.sh/uv/getting-started/installation/)를 따릅니다. 설치 후 필요하면 터미널을 다시 엽니다.
+
 ```sh
 git clone https://github.com/coseung2/modal-workflows.git
 cd modal-workflows
-python -m venv .venv
+uv venv --python 3.12
+uv pip install --python .venv -r requirements.txt
 ```
 
-PowerShell에서는 `.\.venv\Scripts\Activate.ps1`, macOS/Linux에서는 `source .venv/bin/activate`로 활성화합니다.
+Python 3.12가 없으면 uv가 내려받습니다. 가상환경 활성화 없이 **저장소 루트에서 `uv run python ...`**으로 실행합니다. 기존 `.venv`가 있으면 먼저 Python 버전을 확인하고, 다른 환경을 임의로 삭제하거나 덮어쓰지 않습니다.
 
 ```sh
-python -m pip install -r requirements.txt
-python -m modal profile current
-python -m modal app list --json
+uv run python --version
+uv run python -m modal profile current
+uv run python -m modal app list --json
 ```
 
-인증이 없다면 `python -m modal setup`에서 사용자가 한 번 인증합니다. 기존 인증이 있으면 재발급하지 않습니다. 자동화 환경에서는 자신의 Modal API 토큰을 비밀 환경 변수로 제공할 수 있습니다. 토큰을 채팅·요청 JSON·Git에 넣지 않습니다.
+인증이 없다면 `uv run python -m modal setup`에서 사용자가 한 번 인증합니다. 기존 인증이 있으면 재발급하지 않습니다. 자동화 환경에서는 자신의 Modal API 토큰을 비밀 환경 변수로 제공할 수 있습니다. 토큰을 채팅·요청 JSON·Git에 넣지 않습니다.
 
 ## 2. 자기 워크플로우 구축
 
 ```sh
 # 로컬 계획만 출력: 원격 실행·다운로드 없음
-python tools/setup_modal.py h3
+uv run python tools/setup_modal.py h3
 # 승인한 CPU 빌드·다운로드·배포를 실제 수행
-python tools/setup_modal.py h3 --apply
+uv run python tools/setup_modal.py h3 --apply
 ```
 
 이미지는 `image`, 음악은 `music`으로 바꿉니다. 필요한 종류만 실행하세요.
@@ -86,12 +89,12 @@ python tools/setup_modal.py h3 --apply
 ```
 
 ```sh
-python tools/modal_workflow.py prepare video --request ../video-request.json --out ../video-run
+uv run python tools/modal_workflow.py prepare video --request ../video-request.json --out ../video-run
 # 승인된 GPU 생성 1건 제출
-python tools/modal_workflow.py submit ../video-run
-python tools/modal_workflow.py status ../video-run
+uv run python tools/modal_workflow.py submit ../video-run
+uv run python tools/modal_workflow.py status ../video-run
 # completed 이후
-python tools/modal_workflow.py download ../video-run
+uv run python tools/modal_workflow.py download ../video-run
 ```
 
 `prepare`는 로컬 검사만 합니다. `submit`은 유료 GPU 실행을 제출하고 호출 ID를 보존합니다. `status`는 한 번 조회하고 종료하므로 진행 중이면 30–60초 후 같은 폴더를 다시 조회하세요. 응답이 늦다고 재제출하지 않습니다. 중단 요청은 `cancel`입니다.
@@ -115,7 +118,7 @@ H3는 JSON 그래프를 사용합니다. **YuE2는 ComfyUI JSON이 아닌 Python
 ## 검증 범위
 
 ```sh
-python -m unittest tools.test_modal_setup tools.test_modal_workflow
+uv run python -m unittest tools.test_modal_setup tools.test_modal_workflow
 ```
 
 공개 소스 이미지 빌드와 CPU 필수 노드 14개 등록을 실제 확인했습니다. 새 계정의 전체 모델 다운로드와 GPU 추론은 사용자 환경에서 별도로 검증해야 합니다. [검증 기록](docs/modal-bootstrap-verification.md)에 확인한 범위와 미검증 범위를 구분했습니다.

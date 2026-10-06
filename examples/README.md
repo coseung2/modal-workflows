@@ -18,15 +18,15 @@
 
 ### 공통 실행법
 
-저장소 루트에서 실행한다. 필요한 환경이 없다면 먼저 `python tools/setup_modal.py h3`로 계획을 확인한다. 이미지·음악은 각각 `image`, `music`이다.
+저장소 루트에서 실행한다. 필요한 환경이 없다면 먼저 `uv run python tools/setup_modal.py h3`로 계획을 확인한다. 이미지·음악은 각각 `image`, `music`이다.
 
 ```sh
-python tools/modal_workflow.py prepare video --request examples/requests/h3-text.json --out ../example-h3-text
+uv run python tools/modal_workflow.py prepare video --request examples/requests/h3-text.json --out ../example-h3-text
 # 비용 범위 승인 후 한 번 제출
-python tools/modal_workflow.py submit ../example-h3-text
-python tools/modal_workflow.py status ../example-h3-text
+uv run python tools/modal_workflow.py submit ../example-h3-text
+uv run python tools/modal_workflow.py status ../example-h3-text
 # completed 이후
-python tools/modal_workflow.py download ../example-h3-text
+uv run python tools/modal_workflow.py download ../example-h3-text
 ```
 
 Krea·Ideogram·무드보드는 `prepare image`, YuE2는 `prepare music`으로 바꾸고 해당 요청 JSON과 새 출력 폴더를 지정한다. 모든 명령은 같은 Modal 계정·환경을 사용한다. 진행 중이면 같은 폴더를 조회하고 제출을 반복하지 않는다.
