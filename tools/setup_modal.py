@@ -31,6 +31,13 @@ def main():
     subprocess.run([sys.executable, '-m', 'modal', 'app', 'list', '--json'], cwd=ROOT, check=True)
     for command in plan(args.target):
         subprocess.run([sys.executable, '-m', 'modal', *command], cwd=ROOT, check=True)
+    print(json.dumps({
+        'setup_completed': args.target,
+        'next_example': 'examples/README.md',
+        'agent_next_step': '환경 준비가 끝났습니다. 도자기 컵 상업 광고 영상을 무드보드부터 내레이션·영상 생성·자막·최종 편집까지 완성해볼까요?',
+        'before_execution': 'Confirm remaining runtimes, TTS access, local editing tools, commercial-use suitability and approved cost scope. Do not re-ask H3 license status or approvals already given.',
+        'GPU_generation': False,
+    }, ensure_ascii=False, indent=2))
 
 
 if __name__ == '__main__':
